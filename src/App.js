@@ -3,6 +3,8 @@ import { Box, Typography, withStyles } from "@material-ui/core";
 import logo from "./images/COVID19img.jpg";
 import Cards from "./components/Cards";
 import { fetchData } from "./service/api";
+import Countries from "./components/Countries";
+import Chart from "./components/Chart";
 
 const style = {
   container: {
@@ -12,7 +14,7 @@ const style = {
     flexDirection: "column",
   },
   header: {
-    backgroundColor: "#ff0000",
+    backgroundColor: "#f2f2f2",
     width: 400,
     textAlign: "center",
     fontSize: 22,
@@ -28,6 +30,7 @@ const style = {
 class App extends Component {
   state = {
     data: {},
+    country: "",
   };
 
   async componentDidMount() {
@@ -35,6 +38,12 @@ class App extends Component {
     this.setState({ data: fetchedData });
     console.log(fetchedData);
   }
+
+  handleCountryChange = async (country) => {
+    const fetchedData = await fetchData(country);
+    this.setState({ data: fetchedData, country: country });
+    console.log(fetchedData);
+  };
   render() {
     const { data } = this.state;
     return (
@@ -48,6 +57,8 @@ class App extends Component {
         </Typography>
         <img style={{ width: 350 }} src={logo} alt="Covid" />
         <Cards data={data} />
+        <Countries handleCountryChange={this.handleCountryChange} />
+        <Chart data={data} />
       </Box>
     );
   }
